@@ -22,7 +22,13 @@
                 type="password"
                 required
               ></v-text-field>
-              <v-btn type="submit" color="primary" block class="mt-4" :loading="loading">
+              <v-btn
+                type="submit"
+                color="primary"
+                block
+                class="mt-4"
+                :loading="loading"
+              >
                 Entrar
               </v-btn>
             </v-form>
@@ -35,38 +41,45 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data: () => ({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     loading: false,
-    error: null
+    error: null,
   }),
   methods: {
     async handleLogin() {
+      
       this.loading = true;
       try {
-        const res = await axios.post('http://localhost:3000/api/auth/login', {
+        const res = await axios.post("http://localhost:3000/api/auth/login", {
           email: this.email,
-          password: this.password
+          password: this.password,
         });
-        
+
         // Guardamos el token en localStorage para que no se pierda al refrescar
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('user', JSON.stringify(res.data.user));
-        
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
+        // NUEVA LÍNEA: Guardamos en el Store para que sea accesible en toda la app
+        // Usamos 'SET_USER' (o como se llame tu mutación en store/index.js)
+        this.$store.commit("SET_USER", res.data.user);
+
         // Configuramos axios para que envíe el token en todas las futuras peticiones
-        axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-        
-        this.$router.push('/'); // Vamos al Dashboard
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${res.data.token}`;
+
+        this.$router.push("/"); // Vamos al Dashboard
       } catch (err) {
         this.error = "Credenciales inválidas";
       } finally {
         this.loading = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

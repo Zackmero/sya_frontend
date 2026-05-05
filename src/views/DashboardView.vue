@@ -5,76 +5,6 @@
     style="background-color: #faf3e1; min-height: 100vh"
   >
     <v-row>
-      <v-col cols="12" md="8">
-        <v-card class="pa-5 rounded-xl welcome-card" elevation="0">
-          <v-row align="center">
-            <v-col cols="12" sm="8">
-              <h2 class="primary--text mb-2 text-h4 font-weight-bold">
-                ¡Bienvenido, {{ nombreAbogado }}! 🎉
-              </h2>
-              <p class="grey--text text--darken-1 mb-4">
-                El despacho tiene un rendimiento sólido hoy. Aquí tienes el
-                resumen de tus clientes actuales.
-              </p>
-              <v-btn
-                color="primary"
-                depressed
-                class="rounded-lg px-6"
-                to="/ver-clientes"
-                >GESTIONAR CLIENTES</v-btn
-              >
-            </v-col>
-            <v-col cols="4" class="text-right hidden-xs-only">
-              <v-icon size="100" color="#F5E7C6"
-                >mdi-account-star-outline</v-icon
-              >
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-
-      <v-col cols="12" md="4">
-        <v-card class="pa-5 rounded-xl card-mini" elevation="0" height="400">
-          <div class="d-flex justify-space-between align-center mb-2">
-            <span class="caption grey--text font-weight-bold"
-              >RESUMEN DE CLIENTES</span
-            >
-            <v-chip
-              x-small
-              color="secondary"
-              text-color="primary"
-              class="font-weight-bold"
-              >TOTAL: {{ stats ? stats.activos + stats.prospectos : 0 }}</v-chip
-            >
-          </div>
-
-          <v-row no-gutters align="center">
-            <v-col cols="5">
-              <div class="text-h4 font-weight-black primary--text">
-                {{ stats ? stats.activos : 0 }}
-              </div>
-              <div class="caption grey--text">Clientes</div>
-              <div class="text-h6 font-weight-bold accent--text mt-2">
-                {{ stats ? stats.prospectos : 0 }}
-              </div>
-              <div class="caption grey--text">Prospectos</div>
-            </v-col>
-            <v-col cols="7">
-              <div class="mini-chart-wrapper">
-                <pie-chart
-                  v-if="loaded && dataClientes"
-                  :chart-data="dataClientes"
-                  :options="miniChartOptions"
-                  :key="loaded + 'cli'"
-                ></pie-chart>
-              </div>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <v-row>
       <v-col cols="12" md="4">
         <v-card class="pa-5 rounded-xl card-mini h-100" elevation="0">
           <div class="d-flex justify-space-between align-center mb-4">
@@ -161,6 +91,47 @@
               </v-btn>
             </template>
           </v-data-table>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" md="4">
+        <v-card class="pa-5 rounded-xl card-mini" elevation="0" height="400">
+          <div class="d-flex justify-space-between align-center mb-2">
+            <span class="caption grey--text font-weight-bold"
+              >RESUMEN DE CLIENTES</span
+            >
+            <v-chip
+              x-small
+              color="secondary"
+              text-color="primary"
+              class="font-weight-bold"
+              >TOTAL: {{ stats ? stats.activos + stats.prospectos : 0 }}</v-chip
+            >
+          </div>
+
+          <v-row no-gutters align="center">
+            <v-col cols="5">
+              <div class="text-h4 font-weight-black primary--text">
+                {{ stats ? stats.activos : 0 }}
+              </div>
+              <div class="caption grey--text">Clientes</div>
+              <div class="text-h6 font-weight-bold accent--text mt-2">
+                {{ stats ? stats.prospectos : 0 }}
+              </div>
+              <div class="caption grey--text">Prospectos</div>
+            </v-col>
+            <v-col cols="7">
+              <div class="mini-chart-wrapper">
+                <pie-chart
+                  v-if="loaded && dataClientes"
+                  :chart-data="dataClientes"
+                  :options="miniChartOptions"
+                  :key="loaded + 'cli'"
+                ></pie-chart>
+              </div>
+            </v-col>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>

@@ -1,6 +1,13 @@
 <template>
-  <v-app style="background-color: #FAF3E1;">
-    <v-navigation-drawer v-if="estaLogueado" v-model="drawer" app color="#222222" dark width="260">
+  <v-app style="background-color: #faf3e1">
+    <v-navigation-drawer
+      v-if="estaLogueado"
+      v-model="drawer"
+      app
+      color="#222222"
+      dark
+      width="260"
+    >
       <div class="pa-6 d-flex align-center">
         <v-avatar color="primary" size="32" class="mr-3">
           <v-icon small>mdi-gavel</v-icon>
@@ -9,41 +16,92 @@
       </div>
 
       <v-list nav dense class="mt-4">
-        <v-subheader class="grey--text text--darken-1 font-weight-bold">MENÚ</v-subheader>
-        
+        <v-subheader class="grey--text text--darken-1 font-weight-bold"
+          >MENÚ</v-subheader
+        >
+
         <v-list-item to="/" exact active-class="primary--text active-item">
-          <v-list-item-icon><v-icon>mdi-home-variant-outline</v-icon></v-list-item-icon>
-          <v-list-item-content><v-list-item-title>Dashboard</v-list-item-title></v-list-item-content>
+          <v-list-item-icon
+            ><v-icon>mdi-home-variant-outline</v-icon></v-list-item-icon
+          >
+          <v-list-item-content
+            ><v-list-item-title
+              >Dashboard</v-list-item-title
+            ></v-list-item-content
+          >
         </v-list-item>
 
-        <v-subheader class="grey--text text--darken-1 font-weight-bold mt-4">GESTIÓN</v-subheader>
+        <v-subheader class="grey--text text--darken-1 font-weight-bold mt-4"
+          >GESTIÓN</v-subheader
+        >
 
-        <v-list-item to="/ver-clientes" active-class="primary--text active-item">
-          <v-list-item-icon><v-icon>mdi-account-group-outline</v-icon></v-list-item-icon>
-          <v-list-item-content><v-list-item-title>Ver Clientes</v-list-item-title></v-list-item-content>
+        <v-list-item
+          to="/ver-clientes"
+          active-class="primary--text active-item"
+        >
+          <v-list-item-icon
+            ><v-icon>mdi-account-group-outline</v-icon></v-list-item-icon
+          >
+          <v-list-item-content
+            ><v-list-item-title
+              >Ver Clientes</v-list-item-title
+            ></v-list-item-content
+          >
         </v-list-item>
 
         <v-list-item to="/ver-casos" active-class="primary--text active-item">
-          <v-list-item-icon><v-icon>mdi-folder-open-outline</v-icon></v-list-item-icon>
-          <v-list-item-content><v-list-item-title>Ver Casos</v-list-item-title></v-list-item-content>
+          <v-list-item-icon
+            ><v-icon>mdi-folder-open-outline</v-icon></v-list-item-icon
+          >
+          <v-list-item-content
+            ><v-list-item-title
+              >Ver Casos</v-list-item-title
+            ></v-list-item-content
+          >
         </v-list-item>
 
-        <v-subheader class="grey--text text--darken-1 font-weight-bold mt-4">REGISTROS</v-subheader>
+        <v-subheader class="grey--text text--darken-1 font-weight-bold mt-4"
+          >REGISTROS</v-subheader
+        >
 
-        <v-list-item to="/registrar-cliente" active-class="primary--text active-item">
-          <v-list-item-icon><v-icon>mdi-account-plus-outline</v-icon></v-list-item-icon>
-          <v-list-item-content><v-list-item-title>Nuevo Cliente</v-list-item-title></v-list-item-content>
+        <v-list-item
+          to="/registrar-cliente"
+          active-class="primary--text active-item"
+        >
+          <v-list-item-icon
+            ><v-icon>mdi-account-plus-outline</v-icon></v-list-item-icon
+          >
+          <v-list-item-content
+            ><v-list-item-title
+              >Nuevo Cliente</v-list-item-title
+            ></v-list-item-content
+          >
         </v-list-item>
 
-        <v-list-item to="/registrar-caso" active-class="primary--text active-item">
-          <v-list-item-icon><v-icon>mdi-folder-plus-outline</v-icon></v-list-item-icon>
-          <v-list-item-content><v-list-item-title>Nuevo Caso</v-list-item-title></v-list-item-content>
+        <v-list-item
+          to="/registrar-caso"
+          active-class="primary--text active-item"
+        >
+          <v-list-item-icon
+            ><v-icon>mdi-folder-plus-outline</v-icon></v-list-item-icon
+          >
+          <v-list-item-content
+            ><v-list-item-title
+              >Nuevo Caso</v-list-item-title
+            ></v-list-item-content
+          >
         </v-list-item>
       </v-list>
 
       <template v-slot:append>
         <div class="pa-4">
-          <v-btn block color="primary" depressed class="rounded-lg" @click="cerrarSesion">
+          <v-btn
+            block
+            color="primary"
+            depressed
+            class="rounded-lg"
+            @click="cerrarSesion"
+          >
             <v-icon left>mdi-logout</v-icon> SALIR
           </v-btn>
         </div>
@@ -53,7 +111,7 @@
     <v-app-bar v-if="estaLogueado" app color="white" light elevation="1">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
-      
+
       <div class="d-flex align-center">
         <div class="text-right mr-3">
           <div class="body-2 font-weight-bold">{{ nombreAbogado }}</div>
@@ -72,33 +130,43 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data: () => ({
     drawer: true,
   }),
 
+  
+  created() {
+    const userSaved = localStorage.getItem("user");
+    if (userSaved) {
+      // Si hay un usuario en el "disco", lo subimos a la "memoria viva"
+      this.$store.commit("SET_USER", JSON.parse(userSaved));
+    }
+  },
+
   computed: {
     // Comprobamos si hay un token para mostrar u ocultar el menú
     estaLogueado() {
       // Usamos esta lógica para que el menú se oculte automáticamente en la vista de Login
-      return this.$route.path !== '/login';
+      return this.$route.path !== "/login";
     },
     nombreAbogado() {
-      const user = JSON.parse(localStorage.getItem('user'));
-      return user ? user.nombre : '';
-    }
+      const user = JSON.parse(localStorage.getItem("user"));
+      return user ? user.nombre : "";
+    },
   },
+
 
   methods: {
     cerrarSesion() {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      delete axios.defaults.headers.common['Authorization'];
-      this.$router.push('/login');
-    }
-  }
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      delete axios.defaults.headers.common["Authorization"];
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 
@@ -106,6 +174,6 @@ export default {
 /* Estilo para el ítem activo del sidebar */
 .active-item {
   background-color: rgba(255, 109, 31, 0.1) !important;
-  border-right: 4px solid #FF6D1F;
+  border-right: 4px solid #ff6d1f;
 }
 </style>

@@ -7,11 +7,12 @@ export default new Vuetify({
   theme: {
     themes: {
       light: {
-        primary: '#FF6D1F',    // Naranja vibrante de tu paleta
-        secondary: '#F5E7C6',  // Beige intermedio
-        accent: '#222222',     // Negro carbón
-        background: '#FAF3E1', // Crema claro para el fondo
-        info: '#FF6D1F',
+        primary: '#67C090',    // Naranja vibrante de tu paleta
+        secondary: '#DDF4E7',  // Beige intermedio
+        accent: '#124170',     // Negro carbón
+        background: '#26667F', // Crema claro para el fondo
+        info: '#67C090',
+
       },
     },
   },

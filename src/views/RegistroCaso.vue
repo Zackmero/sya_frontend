@@ -106,6 +106,23 @@
               Plan de Pagos y Amortización
             </h3>
 
+            <v-radio-group
+              v-model="finanzas.modalidad"
+              row
+              @change="limpiarYCalcular"
+            >
+              <v-radio
+                label="Definir por Meses"
+                value="meses"
+                color="primary"
+              ></v-radio>
+              <v-radio
+                label="Definir por Cuota Fija"
+                value="cuota"
+                color="primary"
+              ></v-radio>
+            </v-radio-group>
+
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
@@ -156,6 +173,36 @@
                   @change="calcularAmortizacion"
                 ></v-text-field>
               </v-col>
+
+              <v-col cols="12" md="6" v-if="finanzas.modalidad === 'meses'">
+                <v-select
+                  v-model.number="finanzas.num_pagos"
+                  :items="[
+                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+                    18, 19, 20, 24,
+                  ]"
+                  label="Meses a pagar"
+                  outlined
+                  rounded
+                  dense
+                  @change="calcularAmortizacion"
+                ></v-select>
+              </v-col>
+
+              <v-col cols="12" md="6" v-if="finanzas.modalidad === 'cuota'">
+                <v-text-field
+                  v-model.number="finanzas.cuota_mensual"
+                  label="Monto mensual esperado"
+                  prefix="$"
+                  type="number"
+                  outlined
+                  rounded
+                  dense
+                  @change="calcularAmortizacion"
+                  hint="El sistema calculará los meses automáticamente"
+                  persistent-hint
+                ></v-text-field>
+              </v-col>
             </v-row>
 
             <v-data-table
@@ -170,7 +217,21 @@
               class="elevation-1 mt-4 rounded-lg"
             >
               <template #[`item.pago_programado`]="{ item }">
-                <strong>${{ item.pago_programado.toFixed(2) }}</strong>
+                <strong v-if="item.num_pago === 0"
+                  >${{ item.pago_programado }}</strong
+                >
+                <v-text-field
+                  v-else
+                  v-model.number="item.pago_programado"
+                  prefix="$"
+                  type="number"
+                  dense
+                  outlined
+                  hide-details
+                  class="mt-1 mb-1"
+                  style="max-width: 150px"
+                  @change="reajustarCuotas(item)"
+                ></v-text-field>
               </template>
               <template #[`item.estatus`]="{ item }">
                 <v-chip
@@ -225,11 +286,13 @@ export default {
     },
 
     finanzas: {
+      modalidad: "meses",
       costo_total: 0,
       anticipo: 0,
       num_pagos: 0,
+      cuota_mensual: 0,
       fecha_firma: new Date().toISOString().split("T")[0],
-      metodo_pago: 'efectivo',
+      metodo_pago: "efectivo",
     },
 
     headersAmortizacion: [
@@ -258,12 +321,18 @@ export default {
   },
 
   methods: {
+    limpiarYCalcular() {
+      // Limpia la tabla cuando cambian de radio button para no causar confusión
+      this.tablaAmortizacion = [];
+      this.finanzas.num_pagos = 0;
+      this.finanzas.cuota_mensual = 0;
+    },
+
     calcularAmortizacion() {
       this.tablaAmortizacion = [];
       const costo = parseFloat(this.finanzas.costo_total) || 0;
       const anticipo = parseFloat(this.finanzas.anticipo) || 0;
-      const numPagos = parseInt(this.finanzas.num_pagos) || 0;
-      const saldo = costo - anticipo;
+      let saldo = costo - anticipo;
 
       if (costo <= 0) return;
 
@@ -272,39 +341,81 @@ export default {
           num_pago: 0,
           concepto: "Anticipo (Firma)",
           fecha_programada: this.finanzas.fecha_firma,
-          pago_programado: anticipo, // Esto ya estaba bien
+          pago_programado: anticipo,
           estatus: "Pagado",
           metodo: this.finanzas.metodo_pago,
         });
       }
 
-      if (numPagos > 0 && saldo > 0) {
+      if (saldo <= 0) return;
+
+      // Variables para manejar las fechas (quincenas)
+      let fechaBase = new Date(this.finanzas.fecha_firma);
+      fechaBase.setMonth(fechaBase.getMonth() + 1);
+
+      // --- CAMINO A: MODALIDAD POR MESES (Tu código original) ---
+      if (this.finanzas.modalidad === "meses") {
+        const numPagos = parseInt(this.finanzas.num_pagos) || 0;
+        if (numPagos <= 0) return;
+
         const montoPorCuota = saldo / numPagos;
 
-        let fechaBase = new Date(this.finanzas.fecha_firma);
-        fechaBase.setMonth(fechaBase.getMonth() + 1);
-
         for (let i = 1; i <= numPagos; i++) {
-          let dia = fechaBase.getDate();
-          let mes = fechaBase.getMonth();
-          let anio = fechaBase.getFullYear();
-
-          if (dia <= 15) {
-            fechaBase = new Date(anio, mes, 16);
-          } else {
-            fechaBase = new Date(anio, mes + 1, 1);
-          }
-
+          fechaBase = this.calcularSiguienteQuincena(fechaBase);
           this.tablaAmortizacion.push({
             num_pago: i,
             concepto: `Cuota ${i} de ${numPagos}`,
             fecha_programada: fechaBase.toISOString().split("T")[0],
-            pago_programado: montoPorCuota, // <--- CAMBIO AQUÍ: de monto_programado a pago_programado
+            pago_programado: Number(montoPorCuota.toFixed(2)),
+            estatus: "Pendiente",
+          });
+          fechaBase.setDate(fechaBase.getDate() + 15);
+        }
+      } // --- CAMINO B: MODALIDAD POR CUOTA FIJA (Nuevo requerimiento) ---
+      else if (this.finanzas.modalidad === "cuota") {
+        const cuotaFija = parseFloat(this.finanzas.cuota_mensual) || 0;
+        if (cuotaFija <= 50) return;
+
+        let numCuota = 1;
+        while (saldo > 0) {
+          if (numCuota > 120) {
+            console.warn(
+              "Límite de cuotas alcanzado. La cuota es muy pequeña.",
+            );
+            break;
+          }
+
+          // Si el saldo es menor a la cuota, cobramos solo el remanente (el "piquito" final)
+          const cobrarEstaCuota = saldo >= cuotaFija ? cuotaFija : saldo;
+
+          fechaBase = this.calcularSiguienteQuincena(fechaBase);
+
+          this.tablaAmortizacion.push({
+            num_pago: numCuota,
+            concepto: `Abono Mensual #${numCuota}`,
+            fecha_programada: fechaBase.toISOString().split("T")[0],
+            pago_programado: Number(cobrarEstaCuota.toFixed(2)),
             estatus: "Pendiente",
           });
 
+          saldo -= cobrarEstaCuota; // Restamos al saldo
+          saldo = Number(saldo.toFixed(2)); // Evitamos errores de decimales en JS
+
           fechaBase.setDate(fechaBase.getDate() + 15);
+          numCuota++;
         }
+      }
+    },
+
+    // Refactorizamos la lógica de las quincenas a una función limpia
+    calcularSiguienteQuincena(fechaActual) {
+      let dia = fechaActual.getDate();
+      let mes = fechaActual.getMonth();
+      let anio = fechaActual.getFullYear();
+      if (dia <= 15) {
+        return new Date(anio, mes, 16);
+      } else {
+        return new Date(anio, mes + 1, 1);
       }
     },
 
