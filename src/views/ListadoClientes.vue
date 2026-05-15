@@ -150,7 +150,7 @@ export default {
     async obtenerClientes() {
       this.loading = true;
       try {
-        const res = await axios.get('http://localhost:3000/api/clientes/todos', {
+        const res = await axios.get('/clientes/todos', {
           headers: this.getAuthHeader()
         });
         this.clientes = res.data.data;
@@ -197,7 +197,7 @@ export default {
         };
 
         const res = await axios.put(
-          `http://localhost:3000/api/clientes/actualizar/${this.clienteSeleccionado.id_cliente}`,
+          `/clientes/actualizar/${this.clienteSeleccionado.id_cliente}`,
           payload,
           { headers: this.getAuthHeader() }
         );

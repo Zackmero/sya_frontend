@@ -55,7 +55,7 @@ export default {
       
       this.loading = true;
       try {
-        const res = await axios.post("http://localhost:3000/api/auth/login", {
+        const res = await axios.post("/auth/login", {
           email: this.email,
           password: this.password,
         });

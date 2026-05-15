@@ -6,6 +6,9 @@ import store from "./store";
 
 import axios from 'axios';
 
+axios.defaults.baseURL = 'https://api-saldana.onrender.com/api';
+Vue.prototype.$http = axios;
+
 Vue.config.productionTip = false;
 
 const token = localStorage.getItem("token");

@@ -314,7 +314,7 @@ export default {
     async cargarEstados() {
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/clientes/estados",
+          "/clientes/estados",
           {
             headers: this.getAuthHeader(),
           },
@@ -329,7 +329,7 @@ export default {
 
     async cargarCatalogos() {
       try {
-        const base = "http://localhost:3000/api/clientes";
+        const base = "/api/clientes";
 
         // Ejecutamos todas las peticiones al mismo tiempo para que sea rápido
         const [t, e, p, c, tu, tel] = await Promise.all([
@@ -362,7 +362,7 @@ export default {
         try {
           // Le pegamos a nuestro propio backend
           const res = await axios.get(
-            `http://localhost:3000/api/clientes/cp/${this.cliente.cp}`,
+            `/clientes/cp/${this.cliente.cp}`,
             { headers: this.getAuthHeader() },
           );
 
@@ -400,7 +400,7 @@ export default {
       this.listas.coloniasManual = [];
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/clientes/municipios?estado=${this.cliente.estado}`,
+          `/clientes/municipios?estado=${this.cliente.estado}`,
           { headers: this.getAuthHeader() },
         );
         if (res.data.success) {
@@ -416,7 +416,7 @@ export default {
       this.selColoniaManual = null;
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/clientes/colonias-manual?municipio=${this.cliente.municipio}&estado=${this.cliente.estado}`,
+          `/clientes/colonias-manual?municipio=${this.cliente.municipio}&estado=${this.cliente.estado}`,
           { headers: this.getAuthHeader() },
         );
         if (res.data.success) {
@@ -467,7 +467,7 @@ export default {
 
         console.log("Payload a enviar:", payload); // Debug: Verificar el payload antes de enviarlo
         const res = await axios.post(
-          "http://localhost:3000/api/clientes/registrar",
+          "/clientes/registrar",
           payload,
           { headers: this.getAuthHeader() }, // Agregado por seguridad
         );

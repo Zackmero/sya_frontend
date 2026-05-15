@@ -186,7 +186,7 @@ export default {
     async cargarStatsClientes() {
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/clientes/stats-dashboard",
+          "/clientes/stats-dashboard",
         );
         this.stats = res.data.data;
         this.initCharts();
@@ -214,7 +214,7 @@ export default {
       this.cargandoPagos = true;
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/pagos/resumen-dashboard",
+          "/pagos/resumen-dashboard",
         );
         this.statsPagos = res.data.resumen_mes;
         this.listaCobros = res.data.cobros_prioritarios;

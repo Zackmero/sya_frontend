@@ -358,13 +358,13 @@ export default {
       try {
         // Asegúrate de que esta ruta coincida con tu backend (puedes probar con /detalle/${id} si esta falla)
         const resCaso = await axios.get(
-          `http://localhost:3000/api/casos/${id}`,
+          `/casos/${id}`,
         );
         this.caso = resCaso.data.data;
 
         // Esta ruta debe traer el arreglo de la tabla 'pagos'
         const resPagos = await axios.get(
-          `http://localhost:3000/api/casos/${id}/pagos`,
+          `/casos/${id}/pagos`,
         );
         this.listaPagos = resPagos.data.data;
 
@@ -406,7 +406,7 @@ export default {
           this.formPago.fecha_pago > fechaLimite ? "Atrasado" : "Pagado";
         const payload = { ...this.formPago, estatus: estatusCalculado };
         await axios.put(
-          `http://localhost:3000/api/pagos/${this.pagoSeleccionado.id_pago}`,
+          `/pagos/${this.pagoSeleccionado.id_pago}`,
           payload,
         );
         this.dialogPago = false;
@@ -433,7 +433,7 @@ export default {
     async actualizarRegistro() {
       try {
         await axios.put(
-          `http://localhost:3000/api/pagos/${this.formEdit.id_pago}`,
+          `/pagos/${this.formEdit.id_pago}`,
           this.formEdit,
         );
         this.dialogEditar = false;

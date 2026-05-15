@@ -227,7 +227,7 @@ export default {
 
         // Ejecutamos todas las peticiones al mismo tiempo para mayor velocidad
         const [resCatalogos] = await Promise.all([
-          axios.get("http://localhost:3000/api/casos/catalogos", header),
+          axios.get("/casos/catalogos", header),
         ]);
 
         this.listaEstatus = resCatalogos.data.estatus;
@@ -241,7 +241,7 @@ export default {
     async obtenerCasos() {
       this.loading = true;
       try {
-        const res = await axios.get("http://localhost:3000/api/casos/todos", {
+        const res = await axios.get("/casos/todos", {
           headers: this.getAuthHeader(),
         });
         this.casos = res.data.data;
@@ -298,7 +298,7 @@ export default {
         };
 
         const res = await axios.put(
-          `http://localhost:3000/api/casos/actualizar/${this.casoSeleccionado.id_caso}`,
+          `/casos/actualizar/${this.casoSeleccionado.id_caso}`,
           payload,
           { headers: this.getAuthHeader() },
         );

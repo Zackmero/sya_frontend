@@ -308,8 +308,8 @@ export default {
   async created() {
     try {
       const [resCl, resCat] = await Promise.all([
-        axios.get("http://localhost:3000/api/clientes/todos"),
-        axios.get("http://localhost:3000/api/casos/catalogos"),
+        axios.get("/clientes/todos"),
+        axios.get("/casos/catalogos"),
       ]);
       this.listaClientes = resCl.data.data;
       this.listaAbogados = resCat.data.abogados;
@@ -430,7 +430,7 @@ export default {
           };
 
           await axios.post(
-            "http://localhost:3000/api/casos/registrar",
+            "/casos/registrar",
             payload,
           );
 
