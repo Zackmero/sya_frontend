@@ -329,7 +329,7 @@ export default {
 
     async cargarCatalogos() {
       try {
-        const base = "/api/clientes";
+        const base = "/clientes";
 
         // Ejecutamos todas las peticiones al mismo tiempo para que sea rápido
         const [t, e, p, c, tu, tel] = await Promise.all([
