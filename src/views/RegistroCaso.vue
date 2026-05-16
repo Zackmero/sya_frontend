@@ -3,8 +3,8 @@
     <v-row justify="center">
       <v-col cols="12" md="8">
         <v-card class="pa-6" elevation="3">
-          <v-card-title class="headline blue--text text--darken-2">
-            <v-icon left color="blue darken-2">mdi-folder-plus</v-icon>
+          <v-card-title class="headline teal--text text--darken-2">
+            <v-icon left color="teal teal-darken-2">mdi-folder-plus</v-icon>
             Apertura de Expediente Nuevo
           </v-card-title>
           <v-divider class="mb-6"></v-divider>

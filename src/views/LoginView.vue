@@ -15,13 +15,17 @@
                 type="email"
                 required
               ></v-text-field>
+              
               <v-text-field
                 v-model="password"
                 label="Contraseña"
                 prepend-icon="mdi-lock"
-                type="password"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                @click:append="showPassword = !showPassword"
                 required
               ></v-text-field>
+
               <v-btn
                 type="submit"
                 color="primary"
@@ -47,12 +51,12 @@ export default {
   data: () => ({
     email: "",
     password: "",
+    showPassword: false, // <-- Nueva variable para controlar el ojito
     loading: false,
     error: null,
   }),
   methods: {
     async handleLogin() {
-      
       this.loading = true;
       try {
         const res = await axios.post("/auth/login", {
@@ -64,14 +68,10 @@ export default {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
 
-        // NUEVA LÍNEA: Guardamos en el Store para que sea accesible en toda la app
-        // Usamos 'SET_USER' (o como se llame tu mutación en store/index.js)
         this.$store.commit("SET_USER", res.data.user);
 
         // Configuramos axios para que envíe el token en todas las futuras peticiones
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${res.data.token}`;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
 
         this.$router.push("/"); // Vamos al Dashboard
       } catch (err) {

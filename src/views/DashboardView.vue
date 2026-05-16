@@ -250,7 +250,7 @@ export default {
 }
 
 .primary--text {
-  color: #ff6d1f !important;
+  color: primary !important;
 }
 
 .accent--text {

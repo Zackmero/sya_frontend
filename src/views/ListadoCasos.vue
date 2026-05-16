@@ -1,8 +1,8 @@
 <template>
   <v-container>
     <v-card elevation="2" class="rounded-lg">
-      <v-card-title>
-        <v-icon left color="primary">mdi-folder-multiple</v-icon>
+      <v-card-title class="headline teal--text text--darken-2 pa-4">
+        <v-icon left color="teal">mdi-folder-multiple</v-icon>
         Control de Casos
         <v-spacer></v-spacer>
         <v-text-field

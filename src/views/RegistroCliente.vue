@@ -2,7 +2,7 @@
   <v-container>
     <v-form ref="form" v-model="valid">
       <v-card class="pa-5" elevation="3">
-        <v-card-title class="headline blue--text"
+        <v-card-title class="headline teal--text"
           >Registro de Cliente - Obtener Folio
         </v-card-title>
         <v-divider class="mb-5"></v-divider>
